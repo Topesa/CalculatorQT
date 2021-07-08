@@ -18,5 +18,15 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+private slots:
+    void NumberPressed();       // 0-9
+//    void OperationPressed();    // + - * /
+//    void ChangeSignPressed();   // +/_
+//    void EqualPressed();        // =
+    void on_dot_released();       // .
+//    void ClearPressed();        // C
+//    void BackspacePressed();    // <-
+
 };
 #endif // MAINWINDOW_H
