@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 
-
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -19,14 +18,21 @@ public:
 private:
     Ui::MainWindow *ui;
 
+    double calValue = 0.0;
+    double additionFlag = false;
+    double subtractionFlag = false;
+    double multiplyFlag= false;
+    double divisionFlag = false;
+
+
 private slots:
-    void NumberPressed();       // 0-9
-//    void OperationPressed();    // + - * /
-//    void ChangeSignPressed();   // +/_
-//    void EqualPressed();        // =
-    void on_dot_released();       // .
-//    void ClearPressed();        // C
-//    void BackspacePressed();    // <-
+    void NumberPressed();                   // 0-9
+    void OperationPressed();                // + - * /
+    void ChangeSignOrPercentagePressed();   // +/_ and %
+    void EqualPressed();                    // =
+    void DotPressed();                      // .
+    void ClearPressed();                    // C
+    void BackspacePressed();                // <-
 
 };
 #endif // MAINWINDOW_H
