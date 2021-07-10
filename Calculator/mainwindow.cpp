@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setFixedSize(this->size()); // disable window resize
 
     ui->display->setText(QString::number(calValue));
     QPushButton *numberButton[10];
