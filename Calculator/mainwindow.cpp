@@ -6,9 +6,11 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     this->setFixedSize(this->size()); // disable window resize
 
     ui->display->setText(QString::number(calValue));
+
     QPushButton *numberButton[10];
 
    for (unsigned int i = 0; i < (sizeof(numberButton)/sizeof(numberButton[0])); i++)
@@ -18,16 +20,18 @@ MainWindow::MainWindow(QWidget *parent)
        connect(numberButton[i], SIGNAL(released()), this, SLOT(NumberPressed()));
     }
 
-   connect(ui->add, SIGNAL(released()), this, SLOT(OperationPressed()));
-   connect(ui->sub, SIGNAL(released()), this, SLOT(OperationPressed()));
-   connect(ui->multiply, SIGNAL(released()), this, SLOT(OperationPressed()));
-   connect(ui->div, SIGNAL(released()), this, SLOT(OperationPressed()));
+   SetCheckableTrue();
+
+   connect(ui->add, SIGNAL(released()), this, SLOT(AddPressed()));
+   connect(ui->sub, SIGNAL(released()), this, SLOT(SubPressed()));
+   connect(ui->multiply, SIGNAL(released()), this, SLOT(MulPressed()));
+   connect(ui->div, SIGNAL(released()), this, SLOT(DivPressed()));
    connect(ui->dot, SIGNAL(released()), this, SLOT(DotPressed()));
-   connect(ui->changesign, SIGNAL(released()), this, SLOT(ChangeSignOrPercentagePressed()));
-   connect(ui->perc, SIGNAL(released()), this, SLOT(ChangeSignOrPercentagePressed()));
+   connect(ui->changesign, SIGNAL(released()), this, SLOT(ChangeSignPressed()));
+   connect(ui->perc, SIGNAL(released()), this, SLOT(PercantagePressed()));
    connect(ui->equal, SIGNAL(released()), this, SLOT(EqualPressed()));
    connect(ui->backspace, SIGNAL(released()), this, SLOT(BackspacePressed()));
-   connect(ui->clear, SIGNAL(released()), this, SLOT(ClearPressed()));
+   connect(ui->clear, SIGNAL(released()), this, SLOT(ClearPressed()));   
 }
 
 MainWindow::~MainWindow()
@@ -35,108 +39,128 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::SetCheckableTrue()
+{
+    ui->add->setCheckable(true);
+    ui->sub->setCheckable(true);
+    ui->div->setCheckable(true);
+    ui->multiply->setCheckable(true);
+    ui->equal->setCheckable(true);
+}
+
+void MainWindow::SetCheckedFalse()
+{
+    ui->add->setChecked(false);
+    ui->sub->setChecked(false);
+    ui->multiply->setChecked(false);
+    ui->div->setChecked(false);
+    ui->equal->setChecked(false);    
+}
+
 void MainWindow::NumberPressed()
 {
-    QPushButton *btn = (QPushButton *) sender();
-    QString btnValue = btn->text();
-    QString displayValue = ui->display->text();
+    QPushButton * btn = (QPushButton*)sender();
 
-    if (displayValue.toDouble() == 0 || (displayValue.toDouble() == 0.0))
+    QString displayValue;
+
+    if (ui->display->text() == "0" || ui->add->isChecked() || ui->sub->isChecked() || ui->multiply->isChecked() || ui->div->isChecked()  || ui->equal->isChecked())
     {
-        ui->display->setText(btnValue);
+        displayValue = btn->text();
+        SetCheckedFalse();
     }
     else
     {
-        QString newValue = displayValue + btnValue;
-        double newValueDouble = newValue.toDouble();
-
-        ui->display->setText(QString::number(newValueDouble, 'g', 15));
+       displayValue = ui->display->text() + btn->text();
     }
+
+    ui->display->setText(displayValue);
 }
 
-void MainWindow::OperationPressed()
+void MainWindow::Calculate()
 {
-     additionFlag = false;
-     subtractionFlag = false;
-     multiplyFlag= false;
-     divisionFlag = false;
+    double displayValue = ui->display->text().toDouble();
 
-     QString displayValue = ui->display->text();
-     calValue = displayValue.toDouble();
+    switch (operation)
+    {
+        case (Add):
+        {
+            displayValue += calValue;
+            break;
+        }
+        case (Sub):
+        {
+            displayValue -= calValue;
+            break;
+        }
+        case (Mul):
+        {
+            displayValue *= calValue;
+            break;
+        }
+        case (Div):
+        {
+            displayValue /= calValue;
+            break;
+        }
+        case (None):
+        {
+            break;
+        }
+    }
 
-     QPushButton  *btn = (QPushButton *) sender();
-     QString btnValue = btn->text();
+    calValue = displayValue;
 
-     if (QString::compare(btnValue, "+", Qt::CaseInsensitive) == 0)
-     {
-         additionFlag = true;
-     }
-     else if (QString::compare(btnValue, "-", Qt::CaseInsensitive) == 0)
-     {
-         subtractionFlag = true;
-     }
-     else if (QString::compare(btnValue, "×", Qt::CaseInsensitive) == 0)
-     {
-         multiplyFlag= true;
-     }
-     else if (QString::compare(btnValue, "÷", Qt::CaseInsensitive) == 0)
-     {
-         divisionFlag = true;
-     }
+    ui->display->setText(QString::number(displayValue,'g',15));
+}
 
-     ui->display->setText("");
+void MainWindow::AddPressed()
+{
+    Calculate();
+    operation = Add;
+}
+
+void MainWindow::SubPressed()
+{
+    Calculate();
+    operation = Sub;    
+}
+
+void MainWindow::MulPressed()
+{
+    Calculate();
+    operation = Mul;   
+}
+
+void MainWindow::DivPressed()
+{
+    Calculate();
+    operation = Div;    
 }
 
 void MainWindow::EqualPressed()
 {
-    double result = 0.0;
-    QString displayValue = ui->display->text();
-    double displayValueDouble = displayValue.toDouble();
-
-    if (additionFlag || subtractionFlag|| multiplyFlag|| divisionFlag)
-    {
-        if (additionFlag)
-        {
-            result = calValue + displayValueDouble;
-        }
-        else if (subtractionFlag)
-        {
-            result = calValue - displayValueDouble;
-        }
-        else if (multiplyFlag)
-        {
-            result = calValue * displayValueDouble;
-        }
-        else
-        {
-            result = calValue / displayValueDouble;
-        }
-    }
-
-    ui->display->setText((QString::number(result)));
+    Calculate();
+    operation = None;
 }
 
-void MainWindow::ChangeSignOrPercentagePressed()
+void MainWindow::ChangeSignPressed()
 {
-    QPushButton *btn = (QPushButton*) sender();
-    QString newDisplayNumber;
-    double displayNumber;
+    double displayValue;  
+    displayValue = ui->display->text().toDouble();
 
-    if (btn->text() == "+/_")
-    {
-        displayNumber = ui->display->text().toDouble();
-        displayNumber *= -1;
-        newDisplayNumber = QString::number(displayNumber, 'g', 15);
-        ui->display->setText(newDisplayNumber);
-    }
+    displayValue *= -1;
 
-    if (btn->text() == "%")
-    {
-        displayNumber = ui->display->text().toDouble();
-        displayNumber *= 0.01;
-        newDisplayNumber = QString::number(displayNumber, 'g', 15);
-        ui->display->setText(newDisplayNumber);
-    }
+    ui->display->setText(QString::number(displayValue,'g',15));
+}
+
+void MainWindow::PercantagePressed()
+{
+    double displayValue;  
+    displayValue = ui->display->text().toDouble();
+
+    displayValue *= 0.01;
+
+    ui->display->setText(QString::number(displayValue,'g',15));
 }
 
 void MainWindow::DotPressed()
@@ -144,9 +168,9 @@ void MainWindow::DotPressed()
     QString txt = ui->display->text();
 
     if (!txt.contains('.', Qt::CaseSensitive))
-     {
+    {
         ui->display->setText(txt + ".");
-     }
+    }
 }
 
 void MainWindow::BackspacePressed()
@@ -156,7 +180,7 @@ void MainWindow::BackspacePressed()
     displayValue.QString::chop(1);
     ui->display->setText(displayValue);
 
-    if(displayValue.length() == 0)
+    if (displayValue.length() == 0)
     {
          ui->display->setText("0");
     }
@@ -164,11 +188,13 @@ void MainWindow::BackspacePressed()
 
 void MainWindow::ClearPressed()
 {
-   ui->display->clear();
-   ui->display->setText("0");
+    if (ui->display->text() == "0")
+    {
+        operation = None;
+        calValue = 0;
+    }
+
+    SetCheckedFalse();
+
+    ui->display->setText("0");
 }
-
-
-
-
-

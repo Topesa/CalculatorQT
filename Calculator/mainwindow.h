@@ -2,10 +2,21 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QKeyEvent>
+#include <QAbstractButton>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+enum Operation
+{
+    Add,
+    Sub,
+    Mul,
+    Div,
+    None
+};
 
 class MainWindow : public QMainWindow
 {
@@ -18,21 +29,23 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    double calValue = 0.0;
-    double additionFlag = false;
-    double subtractionFlag = false;
-    double multiplyFlag= false;
-    double divisionFlag = false;
-
+    double calValue = 0;
+    Operation operation;
 
 private slots:
-    void NumberPressed();                   // 0-9
-    void OperationPressed();                // + - * /
-    void ChangeSignOrPercentagePressed();   // +/_ and %
-    void EqualPressed();                    // =
-    void DotPressed();                      // .
-    void ClearPressed();                    // C
-    void BackspacePressed();                // <-
-
+    void NumberPressed();           // 0-9
+    void AddPressed();              // +
+    void SubPressed();              // -
+    void MulPressed();              // *
+    void DivPressed();              // /
+    void ChangeSignPressed();       // +/_
+    void PercantagePressed();       // %
+    void EqualPressed();            // =
+    void DotPressed();              // .
+    void ClearPressed();            // C
+    void BackspacePressed();        // <-
+    void SetCheckableTrue();
+    void SetCheckedFalse();
+    void Calculate();   
 };
 #endif // MAINWINDOW_H

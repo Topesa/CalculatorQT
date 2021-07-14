@@ -7,15 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>280</width>
-    <height>391</height>
+    <height>389</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Calculator</string>
-  </property>
-  <property name="windowIcon">
-   <iconset>
-    <normaloff>C:/Users/pesa7/OneDrive/Desktop/calc icon.png</normaloff>C:/Users/pesa7/OneDrive/Desktop/calc icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="display">
@@ -30,7 +26,7 @@
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>20</pointsize>
+      <pointsize>18</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -424,7 +420,7 @@ QPushButton:pressed
     <property name="geometry">
      <rect>
       <x>210</x>
-      <y>180</y>
+      <y>190</y>
       <width>70</width>
       <height>70</height>
      </rect>
