@@ -99,7 +99,7 @@ void MainWindow::Calculate()
         }
         case (Div):
         {
-            displayValue /= calValue;
+            displayValue = calValue / displayValue;
             break;
         }
         case (None):
