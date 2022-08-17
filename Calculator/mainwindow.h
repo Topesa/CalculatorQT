@@ -14,7 +14,7 @@ enum Operation
     Add,
     Sub,
     Mul,
-    Div,
+    Div,    
     None
 };
 
@@ -43,7 +43,7 @@ private slots:
     void EqualPressed();            // =
     void DotPressed();              // .
     void ClearPressed();            // C
-    void BackspacePressed();        // <-
+    void BackspacePressed();        // <-    
     void SetCheckableTrue();
     void SetCheckedFalse();
     void Calculate();   

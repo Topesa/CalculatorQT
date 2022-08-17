@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
    connect(ui->perc, SIGNAL(released()), this, SLOT(PercantagePressed()));
    connect(ui->equal, SIGNAL(released()), this, SLOT(EqualPressed()));
    connect(ui->backspace, SIGNAL(released()), this, SLOT(BackspacePressed()));
-   connect(ui->clear, SIGNAL(released()), this, SLOT(ClearPressed()));   
+   connect(ui->clear, SIGNAL(released()), this, SLOT(ClearPressed()));
 }
 
 MainWindow::~MainWindow()
